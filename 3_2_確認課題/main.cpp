@@ -11,7 +11,7 @@ const int WIN_WIDTH = 600;
 // ウィンドウ縦幅
 const int WIN_HEIGHT = 400;
 
-bool Enemy::enemyFlag;
+bool Enemy::enemyAliveFlag;
 
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine,
 	_In_ int nCmdShow) {
@@ -113,8 +113,11 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		{
 			for (int i = 0; i < 5; i++)
 			{
-				enemyDeathFlag[i] = BoxCircle(enemyPosX[i] - enemyRadius, enemyPosY[i] - enemyRadius, enemyPosX[i] + enemyRadius, enemyPosY[i] + enemyRadius,
-					playerBulletX, playerBulletY, playerBulletRadius);
+				if (BoxCircle(enemyPosX[i] - enemyRadius, enemyPosY[i] - enemyRadius, enemyPosX[i] + enemyRadius, enemyPosY[i] + enemyRadius,
+					playerBulletX, playerBulletY, playerBulletRadius) == true)
+				{
+					enemy[i]->enemyAliveFlag = false;
+				}
 			}
 
 		}
@@ -139,29 +142,18 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 			playerBulletY = playerPosY;
 		}
 
-		for (int j = 0; j < 5; j++)
-		{
-			//敵のデリート
-			if (enemyDeathFlag[j] == true)
-			{
-				for (int i = 0; i < 5; i++)
-				{
-					delete enemy[i];
-				}
-			}
-		}
 
 		// 描画処理
-		
+
 		//プレイヤーの描画
 		DrawBox(playerPosX - playerRadius, playerPosY - playerRadius, playerPosX + playerRadius, playerPosY + playerRadius, GetColor(255, 255, 255), true);
 		//弾の描画
 		DrawCircle(playerBulletX, playerBulletY, playerBulletRadius, GetColor(255, 0, 255), true);
 
 		//敵の描画
-		if (Enemy::enemyFlag == true)
+		for (int i = 0; i < 5; i++)
 		{
-			for (int i = 0; i < 5; i++)
+			if (enemy[i]->enemyAliveFlag == true)
 			{
 				DrawBox(enemyPosX[i] - enemyRadius, enemyPosY[i] - enemyRadius, enemyPosX[i] + enemyRadius, enemyPosY[i] + enemyRadius, GetColor(255, 0, 0), true);
 			}
@@ -184,6 +176,12 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 			break;
 		}
 	}
+	//敵のデリート
+	for (int i = 0; i < 5; i++)
+	{
+		delete enemy[i];
+	}
+
 	// Dxライブラリ終了処理
 	DxLib_End();
 

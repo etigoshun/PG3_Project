@@ -3,8 +3,8 @@
 class Enemy
 {
 public:
-	static bool enemyFlag;
+	static bool enemyAliveFlag;
 
-	Enemy() { enemyFlag = true; };
-	~Enemy() { enemyFlag = false; }
+	Enemy() { enemyAliveFlag = true; };
+	~Enemy() { enemyAliveFlag = false; }
 };

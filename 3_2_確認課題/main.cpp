@@ -56,7 +56,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	int enemyRadius = 8;
 	int enemySpeed = 5;
 	bool enemyFlag = false;
-	bool enemyDeathFlag = false;
+	bool enemyDeathFlag[5] = { false };
 
 	int playerPosX = 100;
 	int playerPosY = 100;
@@ -111,18 +111,13 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		//‹…‚Æ“G‚Ì“–‚½‚è”»’è
 		if (playerBulletFlag == true)
 		{
-			enemyFlag = true;
-		}
-
-		if (enemyFlag == true)
-		{
 			for (int i = 0; i < 5; i++)
 			{
-				enemyDeathFlag = BoxCircle(enemyPosX[i] - enemyRadius, enemyPosY[i] - enemyRadius, enemyPosX[i] + enemyRadius, enemyPosY[i] + enemyRadius,
+				enemyDeathFlag[i] = BoxCircle(enemyPosX[i] - enemyRadius, enemyPosY[i] - enemyRadius, enemyPosX[i] + enemyRadius, enemyPosY[i] + enemyRadius,
 					playerBulletX, playerBulletY, playerBulletRadius);
 			}
-		}
 
+		}
 
 		//’e‚ðŒ‚‚Â
 		if (playerBulletFlag == false)
@@ -144,24 +139,26 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 			playerBulletY = playerPosY;
 		}
 
-		//“G‚ÌƒfƒŠ[ƒg
-		if (enemyDeathFlag == 1)
+		for (int j = 0; j < 5; j++)
 		{
-			for (int i = 0; i < 5; i++)
+			//“G‚ÌƒfƒŠ[ƒg
+			if (enemyDeathFlag[j] == true)
 			{
-				delete enemy[i];
+				for (int i = 0; i < 5; i++)
+				{
+					delete enemy[i];
+				}
 			}
 		}
 
-
 		// •`‰æˆ—
-
+		
+		//ƒvƒŒƒCƒ„[‚Ì•`‰æ
 		DrawBox(playerPosX - playerRadius, playerPosY - playerRadius, playerPosX + playerRadius, playerPosY + playerRadius, GetColor(255, 255, 255), true);
-
+		//’e‚Ì•`‰æ
 		DrawCircle(playerBulletX, playerBulletY, playerBulletRadius, GetColor(255, 0, 255), true);
 
-		DrawFormatString(0, 0, GetColor(255, 255, 255), "%d", playerBulletFlag);
-
+		//“G‚Ì•`‰æ
 		if (Enemy::enemyFlag == true)
 		{
 			for (int i = 0; i < 5; i++)
@@ -169,10 +166,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 				DrawBox(enemyPosX[i] - enemyRadius, enemyPosY[i] - enemyRadius, enemyPosX[i] + enemyRadius, enemyPosY[i] + enemyRadius, GetColor(255, 0, 0), true);
 			}
 		}
-
-		DrawFormatString(0, 20, GetColor(255, 255, 255), "%d", enemyDeathFlag);
-
-		DrawFormatString(0, 40, GetColor(255, 255, 255), "%d", enemyPosY[1]);
 
 		//---------  ‚±‚±‚Ü‚Å‚ÉƒvƒƒOƒ‰ƒ€‚ð‹Lq  ---------//
 		// (ƒ_ƒuƒ‹ƒoƒbƒtƒ@)— –Ê
